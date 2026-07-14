@@ -5,6 +5,7 @@ import Footer from '../components/Footer'
 import Header from '../components/Header'
 
 import appCss from '../styles.css?url'
+import { AuthProvider } from '#/context/AuthContext'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -37,9 +38,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="">
-        <Header />
-        {children}
-        <Footer />
+        <AuthProvider>
+          <Header />
+          {children}
+          <Footer />
+        </AuthProvider>
         <TanStackDevtools
           config={{
             position: 'bottom-right',
