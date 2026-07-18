@@ -5,7 +5,7 @@ export interface BlockCategory {
 
 export interface BlockDefinition {
   type: string;
-  category: string; // key into CATEGORIES below
+  category: string;
 }
 
 export const CATEGORIES: Record<string, BlockCategory> = {
@@ -13,9 +13,9 @@ export const CATEGORIES: Record<string, BlockCategory> = {
   math: { name: "Math", colour: "#5b67a5" },
   loops: { name: "Loops", colour: "#5ba55b" },
   text: { name: "Text", colour: "#a5745b" },
+  movement: { name: "Movement", colour: "#5ba55b" },
 };
 
-// Every block your app knows about, and which category it belongs to.
 export const BLOCK_REGISTRY: Record<string, BlockDefinition> = {
   controls_if: { type: "controls_if", category: "logic" },
   logic_compare: { type: "logic_compare", category: "logic" },
@@ -24,4 +24,7 @@ export const BLOCK_REGISTRY: Record<string, BlockDefinition> = {
   math_arithmetic: { type: "math_arithmetic", category: "math" },
   controls_repeat_ext: { type: "controls_repeat_ext", category: "loops" },
   text: { type: "text", category: "text" },
+  go_straight: { type: "go_straight", category: "movement" },
+  turn_left: { type: "turn_left", category: "movement" },
+  turn_right: { type: "turn_right", category: "movement" },
 };

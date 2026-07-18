@@ -4,15 +4,15 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import * as Blockly from "blockly";
 import "blockly/blocks";
 import { buildToolbox } from "@/blockly/buildToolbox";
+import { registerCustomBlocks } from "@/blockly/customBlocks";
 
 export const Route = createFileRoute("/mypage")({
   component: MyPage,
 });
 
-// Stand-in for what the API will eventually return
 const testReceivedCode = {
-  blocks: ["controls_if", "math_number"],
-  maxBlocks: 3,
+  blocks: ["controls_if", "math_number", "go_straight", "turn_left", "turn_right"],
+  maxBlocks: 10,
 };
 
 function MyPage() {
@@ -29,7 +29,7 @@ function MyPage() {
 
   useEffect(() => {
     if (!containerReady || !blocklyDiv.current) return;
-
+    registerCustomBlocks();
     const workspace = Blockly.inject(blocklyDiv.current, {
       toolbox: buildToolbox(testReceivedCode.blocks),
       maxBlocks: testReceivedCode.maxBlocks,
@@ -37,7 +37,13 @@ function MyPage() {
 
     workspaceRef.current = workspace;
 
+    const resizeObserver = new ResizeObserver(() => {
+      Blockly.svgResize(workspace);
+    });
+    resizeObserver.observe(blocklyDiv.current);
+
     return () => {
+      resizeObserver.disconnect();
       workspace.dispose();
       workspaceRef.current = null;
     };
@@ -45,15 +51,12 @@ function MyPage() {
 
   return (
     <ProtectedRoute>
-      <main>
-        <h1>Hello World My Page</h1>
+      <main className="flex flex-col h-screen">
+        <h1 className="text-2xl font-bold p-4">Hello World My Page</h1>
 
         <div
           ref={setBlocklyRef}
-          style={{
-            width: "800px",
-            height: "600px",
-          }}
+          className="flex-1 w-full min-h-0"
         />
       </main>
     </ProtectedRoute>
