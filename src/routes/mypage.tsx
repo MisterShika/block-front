@@ -3,19 +3,23 @@ import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { useEffect, useRef, useState, useCallback } from "react";
 import * as Blockly from "blockly";
 import "blockly/blocks";
+import { buildToolbox } from "@/blockly/buildToolbox";
 
 export const Route = createFileRoute("/mypage")({
   component: MyPage,
 });
+
+// Stand-in for what the API will eventually return
+const testReceivedCode = {
+  blocks: ["controls_if", "math_number"],
+  maxBlocks: 3,
+};
 
 function MyPage() {
   const blocklyDiv = useRef<HTMLDivElement | null>(null);
   const workspaceRef = useRef<Blockly.WorkspaceSvg | null>(null);
   const [containerReady, setContainerReady] = useState(false);
 
-  // Callback ref: fires when the div actually mounts (after ProtectedRoute
-  // finishes its auth check and renders the real children), not just on
-  // component mount like a plain useEffect([]) would.
   const setBlocklyRef = useCallback((node: HTMLDivElement | null) => {
     blocklyDiv.current = node;
     if (node) {
@@ -27,33 +31,8 @@ function MyPage() {
     if (!containerReady || !blocklyDiv.current) return;
 
     const workspace = Blockly.inject(blocklyDiv.current, {
-      toolbox: {
-        kind: "categoryToolbox",
-        contents: [
-          {
-            kind: "category",
-            name: "Logic",
-            colour: "#5b80a5",
-            contents: [
-              {
-                kind: "block",
-                type: "controls_if",
-              },
-            ],
-          },
-          {
-            kind: "category",
-            name: "Math",
-            colour: "#5b67a5",
-            contents: [
-              {
-                kind: "block",
-                type: "math_number",
-              },
-            ],
-          },
-        ],
-      },
+      toolbox: buildToolbox(testReceivedCode.blocks),
+      maxBlocks: testReceivedCode.maxBlocks,
     });
 
     workspaceRef.current = workspace;
