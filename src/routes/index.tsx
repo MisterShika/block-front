@@ -10,7 +10,11 @@ function App() {
       <br />
       <Link to="/about">About</Link>
       <br />
-      <Link to="/login">Login</Link>
+      <Link to="/login" search={{ redirect: undefined }}>
+        Login
+      </Link>
+      <br />
+      <Link to="/register">Register</Link>
     </main>
   )
 }
